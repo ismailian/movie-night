@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../config/api_config.dart';
 import '../data/movie_repository.dart';
@@ -36,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _busy = false;
   String? _errorMessage;
   MovieDetails? _result;
+  String _appVersion = '';
 
   // The in-flight lookup, started the instant a pick is made so it resolves in
   // parallel with the reel animation.
@@ -47,6 +49,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadMovies();
+    _loadVersion();
+  }
+
+  Future<void> _loadVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    if (!mounted) return;
+    setState(() => _appVersion = 'v${info.version} (${info.buildNumber})');
   }
 
   @override
@@ -198,6 +207,14 @@ class _HomeScreenState extends State<HomeScreen> {
               '${_entries.length} movies loaded',
               style: AppTheme.body(11,
                   color: AppTheme.textMuted, weight: FontWeight.w600),
+            ),
+          ),
+        if (_appVersion.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              _appVersion,
+              style: AppTheme.body(10, color: AppTheme.textMuted),
             ),
           ),
       ],

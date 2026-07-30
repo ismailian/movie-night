@@ -15,6 +15,7 @@ pubspec.lock
 /macos/
 /windows/
 /web/
+.metadata
 
 # IDE
 .idea/
